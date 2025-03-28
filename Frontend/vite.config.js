@@ -1,9 +1,7 @@
-import { defineConfig } from "vite";
-
+import { defineConfig } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
-  server: {
-    hmr: {
-      overlay: false, // This will disable the error overlay
-    },
-  },
-});
+  plugins: [
+    tailwindcss(),
+  ],
+})
