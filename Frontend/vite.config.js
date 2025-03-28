@@ -1,6 +1,9 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc'; // Ensure React plugin is used
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [react()],
+  server: {
+    hmr: {
+      overlay: false, // This will disable the error overlay
+    },
+  },
 });
