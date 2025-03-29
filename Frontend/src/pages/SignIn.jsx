@@ -1,44 +1,38 @@
 import React, { useState } from 'react';
 import { Link , useNavigate} from 'react-router-dom';
-
+import {signInStart, signInSuccess, signInFailure} from '../redux/user/userSlice.js'; 
+import { useSelector, useDispatch } from 'react-redux';
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const {loading, error} = useSelector((state) => state.user);
   const navigate = useNavigate();
-
+  const dispatch= useDispatch();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(false); // Reset error before request
-
+    
     try {
+      dispatch(signInStart());
       const res = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-
+  
       const data = await res.json();
-      setLoading(false);
-
+  
       if (!res.ok) {
-        console.error("Signin Error:", data.message || "Unknown error");
-        setError(true);
+        dispatch(signInFailure(data.message || "Invalid credentials"));
         return;
       }
-
-      // console.log("User created successfully:", data);
-      setError(false); // No error if successful
+  
+      dispatch(signInSuccess(data));
       navigate('/');
     } catch (error) {
-      console.error('Signup Error:', error.message);
-      setLoading(false);
-      setError(true);
+      dispatch(signInFailure("Network error. Please try again later."));
     }
   };
 
@@ -58,7 +52,7 @@ export default function SignIn() {
           <span className='text-sky-600'>Sign Up</span>
         </Link>
       </div>
-      {error && <p className="text-red-700 mt-5">Something went wrong</p>}
+      {error && <p className="text-red-700 mt-5">{error}</p>}
     </div>
   );
 }
