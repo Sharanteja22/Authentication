@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const navigate=useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -31,8 +32,9 @@ export default function SignUp() {
         return;
       }
 
-      console.log("User created successfully:", data);
+      // console.log("User created successfully:", data);
       setError(false); // No error if successful
+      navigate('/');
     } catch (error) {
       console.error('Signup Error:', error.message);
       setLoading(false);
