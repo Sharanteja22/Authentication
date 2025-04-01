@@ -34,3 +34,21 @@ export const updateUser = async (req, res,next ) => {
         next(err);
     }
 }
+
+
+
+export const deleteUser = async (req, res,next ) => {
+    if (req.user.id!==req.params.id){
+        return next(errorHandler(403,"You can only delete your account"));
+       }
+    try{
+        const deletedUser = await User.findByIdAndDelete(req.params.id);
+        if (!deletedUser) {
+            return next(errorHandler(404, "User not found"));
+        } else {
+            res.status(200).json("User has been deleted");      
+        }
+    }catch(err){
+        next(err);
+    }
+}   
