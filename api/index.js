@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import userRoutes from './routes/user.route.js'
 import authRoutes from './routes/auth.route.js'
 import cookieParser from 'cookie-parser';
+import path from 'path';
 dotenv.config();
 
 mongoose.connect(process.env.MONGO).then(()=>{
@@ -11,7 +12,16 @@ mongoose.connect(process.env.MONGO).then(()=>{
 }).catch((err)=>{
     console.log(err)
 })
+
+const __dirname=path.resolve();
+
 const app=express();
+
+app.use(express.static(path.join(__dirname,'/Frontend/dist')));
+
+app.get('*',(req,res)=>{
+    res.sendFile(path.join(__dirname,'Frontend','dist','index.html'));
+})
 
 app.use(express.json());
 
